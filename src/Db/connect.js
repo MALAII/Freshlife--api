@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-mongoose.set("bufferCommands", false);
-
 let cached = global.mongoose;
 
 if (!cached) {
@@ -9,16 +7,26 @@ if (!cached) {
 }
 
 async function connectDB() {
-  if (cached.conn) return cached.conn;
+  if (cached.conn) {
+    return cached.conn;
+  }
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(process.env.MONGO_URI, {
-      serverSelectionTimeoutMS: 5000,
+      bufferCommands: false,
+    }).then((mongoose) => {
+      console.log("MongoDB Connected");
+      return mongoose;
     });
   }
 
-  cached.conn = await cached.promise;
-  console.log("✅ MongoDB connected");
+  try {
+    cached.conn = await cached.promise;
+  } catch (err) {
+    cached.promise = null;
+    console.error("MongoDB connection error:", err);
+    throw err;
+  }
 
   return cached.conn;
 }

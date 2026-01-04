@@ -4,7 +4,6 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 var mongoose = require("mongoose");
-mongoose.set("bufferCommands", false);
 var cached = global.mongoose;
 if (!cached) {
   cached = global.mongoose = {
@@ -28,20 +27,32 @@ function _connectDB() {
         case 2:
           if (!cached.promise) {
             cached.promise = mongoose.connect(process.env.MONGO_URI, {
-              serverSelectionTimeoutMS: 5000
+              bufferCommands: false
+            }).then(function (mongoose) {
+              console.log("MongoDB Connected");
+              return mongoose;
             });
           }
-          _context.next = 5;
+          _context.prev = 3;
+          _context.next = 6;
           return cached.promise;
-        case 5:
+        case 6:
           cached.conn = _context.sent;
-          console.log("✅ MongoDB connected");
+          _context.next = 14;
+          break;
+        case 9:
+          _context.prev = 9;
+          _context.t0 = _context["catch"](3);
+          cached.promise = null;
+          console.error("MongoDB connection error:", _context.t0);
+          throw _context.t0;
+        case 14:
           return _context.abrupt("return", cached.conn);
-        case 8:
+        case 15:
         case "end":
           return _context.stop();
       }
-    }, _callee);
+    }, _callee, null, [[3, 9]]);
   }));
   return _connectDB.apply(this, arguments);
 }

@@ -8,8 +8,6 @@ var _require = require("../controllers/productController"),
   getProducts = _require.getProducts,
   updateProduct = _require.updateProduct,
   deleteProduct = _require.deleteProduct;
-
-// Protected routes
 router.post("/", authMiddleware(), createProduct);
 router.get("/", authMiddleware(), getProducts);
 router.put("/:id", authMiddleware(), updateProduct);
