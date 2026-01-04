@@ -27,9 +27,9 @@ function _connectDB() {
         case 2:
           if (!cached.promise) {
             cached.promise = mongoose.connect(process.env.MONGO_URI, {
-              bufferCommands: false
+              bufferCommands: false,
+              serverSelectionTimeoutMS: 5000
             }).then(function (mongoose) {
-              console.log("MongoDB Connected");
               return mongoose;
             });
           }
@@ -38,21 +38,22 @@ function _connectDB() {
           return cached.promise;
         case 6:
           cached.conn = _context.sent;
-          _context.next = 14;
+          console.log("✅ MongoDB connected");
+          _context.next = 15;
           break;
-        case 9:
-          _context.prev = 9;
+        case 10:
+          _context.prev = 10;
           _context.t0 = _context["catch"](3);
           cached.promise = null;
-          console.error("MongoDB connection error:", _context.t0);
+          console.error("❌ MongoDB connection failed:", _context.t0);
           throw _context.t0;
-        case 14:
-          return _context.abrupt("return", cached.conn);
         case 15:
+          return _context.abrupt("return", cached.conn);
+        case 16:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[3, 9]]);
+    }, _callee, null, [[3, 10]]);
   }));
   return _connectDB.apply(this, arguments);
 }
